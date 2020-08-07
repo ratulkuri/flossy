@@ -1,49 +1,54 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom'
 
+import Header from './components/header/header.component';
 import Homepage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
+import AuthenticationPage from './pages/auth/authentication.component';
+
+import { auth } from './firebase/firebase.utils'
 
 import './App.css';
 
-const HatsPage = (props) => {
-  console.log(props)
+
+
+class App extends React.Component {
+
+  constructor() {
+    super();
+
+    this.state = {
+      currentUser: null
+    }
+  }
+
+  unSubscribeFromAuth = null;
+
+  componentDidMount(){
+    this.unSubscribeFromAuth = auth.onAuthStateChanged(user => {
+      this.setState({ currentUser: user });
+
+      console.log(user);
+    });
+  }
+
+  componentWillUnmount() {
+    this.unSubscribeFromAuth();
+  }
+
+  render(){
     return (
-    <div>
-      <h1>Hats Page</h1>
-      <button onClick={() => props.history.push(`${props.match.url}/13`)}>Link 13</button>
-      <br/>
-      <button onClick={() => props.history.push(`${props.match.url}/14`)}>Link 14</button>
-      <br/>
-      <button onClick={() => props.history.push(`${props.match.url}/15`)}>Link 15</button>
-      <br/>
-      <button onClick={() => props.history.push(`${props.match.url}/16`)}>Link 16</button>
-      <br/>
-    </div>
-  );
-}
-
-const HatDetails = (props) => {
-  console.log(props);
-  return (
-    <div>
-      <h1>Hat #{props.match.params.productId} Details Page</h1>
-    </div>
-  );
-}
-
-
-function App() {
-  return (
-    <div>
-      <Switch>
-        <Route exact path="/" component={ Homepage } />
-        <Route exact path="/shop" component={ ShopPage } />
-        <Route exact path="/shop/hats" component={ HatsPage } />
-        <Route path="/shop/hats/:productId" component={ HatDetails } />
-      </Switch>
-    </div>
-  );
+      <div>
+        <Header currentUser={this.state.currentUser} />
+        <Switch>
+          <Route exact path="/" component={ Homepage } />
+          <Route exact path="/shop" component={ ShopPage } />
+          {/* <Route path="/shop/hats/:productId" component={ HatDetails } /> */}
+          <Route exact path="/login" component={ AuthenticationPage } />
+        </Switch>
+      </div>
+    )
+  }
 }
 
 export default App;
