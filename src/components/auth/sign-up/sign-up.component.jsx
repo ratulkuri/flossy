@@ -1,16 +1,16 @@
 import React from 'react';
 import FormInput from '../../forms/form-input.component';
 import PrimaryButton from '../../buttons/primary-button.component';
+import { auth, createUserProfileDocument } from '../../../firebase/firebase.utils';
 
 import './sign-up.style.scss';
-import { auth, createUserProfileDocument } from '../../../firebase/firebase.utils';
 
 class SignUp extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            name: '',
+            displayName: '',
             email: '',
             password: '',
             confirmPassword: ''
@@ -20,7 +20,7 @@ class SignUp extends React.Component {
     handleSubmit = async event => {
         event.preventDefault();
 
-        const { name, email, password, confirmPassword } = this.state;
+        const { displayName, email, password, confirmPassword } = this.state;
 
         if (password !== confirmPassword) {
             alert("Password didn't match");
@@ -30,10 +30,10 @@ class SignUp extends React.Component {
         try {
             const { user } = await auth.createUserWithEmailAndPassword(email, password);
 
-            await createUserProfileDocument(user, { name });
+            await createUserProfileDocument(user, { displayName });
 
             this.setState({
-                name: '',
+                displayName: '',
                 email: '',
                 password: '',
                 confirmPassword: ''
@@ -42,7 +42,7 @@ class SignUp extends React.Component {
 
 
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
     }
 
@@ -53,7 +53,7 @@ class SignUp extends React.Component {
     }
 
     render() {
-        const { name, email, password, confirmPassword } = this.state;
+        const { displayName, email, password, confirmPassword } = this.state;
         return(
             <div className="sign-up">
                 <h2>I do not have an account</h2>
@@ -61,9 +61,9 @@ class SignUp extends React.Component {
                 <form action="" onSubmit={this.handleSubmit}>
                     <FormInput
                         type="text"
-                        name="name"
+                        name="displayName"
                         label='Full Name'
-                        value={name}
+                        value={displayName}
                         handleChange={this.handleChange}
                         required='required'
                     />

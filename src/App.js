@@ -41,6 +41,7 @@ class App extends React.Component {
           }, () => {
             if(this.state.currentUser){
               console.log("Signed In!");
+              // console.log(this.state.currentUser);
             } else {
               console.log("Not Signed In!");
             }
