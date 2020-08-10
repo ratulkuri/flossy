@@ -22,5 +22,19 @@
             padding: 10px 15px;
             cursor: pointer;
         }
+
+        .dp {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 5px;
+            background-size: cover;
+            background-position: center;
+
+            & img {
+                width: 100%;
+            }
+        }
     }
 }
